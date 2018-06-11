@@ -4,7 +4,7 @@ let Image = require('./src/Image');
 
 class Lambda {
   static getRandomParams(){
-    const iterations = 500 + Math.floor(5000 * Math.random());
+    const iterations = 500 + Math.floor(4500 * Math.random());
     const radius = 10 + Math.floor(20 * Math.random());
     const damping = .01 * Math.random();
 
@@ -87,7 +87,7 @@ class Lambda {
       callback(null, params);
     }
     catch (err){
-      callback(err);
+      callback(err.message);
     }
 
     let duration = Date.now() - timeStart;
