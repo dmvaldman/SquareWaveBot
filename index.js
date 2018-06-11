@@ -1,12 +1,13 @@
 let Image = require('./src/Image');
+let fs = require("fs");
 
 function saveToDisk(img, params, path='out.png'){
-  require("fs").writeFile(path, img, 'base64', function(err) {
-    console.log(params);
+  console.log('Parameters used: ', params);
+  fs.writeFile(path, img, 'base64', function(err) {
     if (err !== null)
-      console.log(err);
+      console.log(err.message);
     else
-      console.log('Success!');
+      console.log('Success! Image saved to', path);
   });
 }
 
