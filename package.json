@@ -1,0 +1,9 @@
+{
+  "name": "SquareWaveBot",
+  "version": "0.0.1",
+  "description": "SquareWave Twitter Bot",
+  "dependencies": {
+    "jimp": "^0.2.28",
+    "twit": "^2.2.9"
+  }
+}
