@@ -9,6 +9,36 @@ class Image{
         this.interpScale = interpScale;
     }
 
+    static getRandomParams(){
+        const iterations = 500 + Math.floor(4500 * Math.random());
+        const radius = 10 + Math.floor(20 * Math.random());
+        const damping = .01 * Math.random();
+
+        return {
+          iterations: iterations,
+          radius: radius,
+          damping: damping,
+          speed: .7,
+          size: [500, 500],
+          scale: 4
+        };
+    }
+
+    static async createRandom(){
+        const params = Image.getRandomParams();
+
+        try {
+          let image = new Image(params.size, params.scale);
+          let img = await image.create(params);
+          img = img.replace(/^data:image\/png;base64,/, "");
+          return [img, params]
+        }
+        catch (err){
+          console.log(err);
+          return err;
+        }
+    }
+
     async create({speed, damping, iterations, radius}){
         return new Promise(function(resolve, reject){
             let pde = new WaveGrid(this.size, {speed, damping});
