@@ -36,7 +36,7 @@ class Lambda {
   static postToTwitter(img, params){
     T.post('media/upload', { media_data: img }, function (err, data, response) {
       let mediaIdStr = data.media_id_string;
-      let altText = stringify_params(params);
+      let altText = JSON.stringify(params);
       let meta_params = { media_id: mediaIdStr, alt_text: { text: altText } };
 
       T.post('media/metadata/create', meta_params, function (err, data, response) {
