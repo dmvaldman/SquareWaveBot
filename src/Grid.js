@@ -1,5 +1,6 @@
+// A 2-dimensional array backed by a Float64 typed array.
+
 class Grid{
-    // A 2-dimensional array backed by a Float64 typed array.
     constructor(size){
         this.Nrows = size[0];
         this.Ncols = size[1];
@@ -27,4 +28,4 @@ class Grid{
     }
 }
 
-module.exports = Grid
+module.exports = Grid;

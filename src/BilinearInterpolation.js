@@ -1,20 +1,24 @@
+// Bilinear interpolation of a grid by a scale factor.
+
 let Grid = require('./Grid');
 
 class BilinearInterpolation {
     static interpQuad(tl, tr, bl, br, x, y){
+        // Interpolate inside a quad.
         let interpXTop = tr * x + tl * (1 - x);
         let interpXBot = br * x + bl * (1 - x);
         return interpXBot * y + interpXTop * (1 - y);
     }
 
     static interpGrid(grid, scale){
+        // Interpolate an entire grid.
         const Nrows = grid.Nrows;
         const Ncols = grid.Ncols;
         const sizeHD = [Nrows * scale, Ncols * scale];
 
-        let gridHD = new Grid(sizeHD)
+        let gridHD = new Grid(sizeHD);
 
-        let max = -Infinity
+        let max = -Infinity;
         for (let row = 0; row < Nrows - 1; row++){
             let HDrow = row * scale;
             for (let col = 0; col < Ncols - 1; col++){
@@ -25,7 +29,7 @@ class BilinearInterpolation {
                     bl = grid.get(row + 1, col + 0),
                     br = grid.get(row + 1, col + 1);
 
-                //interior interpolated points
+                // Interior interpolated points.
                 for (let i = 1; i <= scale; i++){
                     let dx = i / (scale + 1);
                     for (let j = 1; j <= scale; j++){
@@ -36,7 +40,7 @@ class BilinearInterpolation {
                     };
                 };
 
-                //corners
+                // Corners.
                 gridHD.set(HDrow,         HDcol,         tl);
                 gridHD.set(HDrow + scale + 1, HDcol,         bl);
                 gridHD.set(HDrow,         HDcol + scale + 1, tr);
@@ -48,4 +52,4 @@ class BilinearInterpolation {
     }
 }
 
-module.exports = BilinearInterpolation
+module.exports = BilinearInterpolation;

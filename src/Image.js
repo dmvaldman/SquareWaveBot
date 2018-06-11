@@ -1,3 +1,5 @@
+// Create an image representing the iterated solution of a PDE.
+
 let Jimp = require('jimp');
 let WaveGrid = require('./WaveGrid');
 let BilinearInterpolation = require('./BilinearInterpolation');
@@ -10,44 +12,47 @@ class Image{
     }
 
     static getRandomParams(){
+        // Create random parameters.
         const iterations = 500 + Math.floor(4500 * Math.random());
         const radius = 10 + Math.floor(20 * Math.random());
         const damping = .01 * Math.random();
 
         return {
-          iterations: iterations,
-          radius: radius,
-          damping: damping,
-          speed: .7,
-          size: [500, 500],
-          scale: 4
+            iterations: iterations,
+            radius: radius,
+            damping: damping,
+            speed: .7,
+            size: [500, 500],
+            scale: 4
         };
     }
 
     static async createRandom(){
+        // Create Image from random parameters.
         const params = Image.getRandomParams();
 
         try {
-          let image = new Image(params.size, params.scale);
-          let img = await image.create(params);
-          img = img.replace(/^data:image\/png;base64,/, "");
-          return [img, params]
+            let image = new Image(params.size, params.scale);
+            let img = await image.create(params);
+            img = img.replace(/^data:image\/png;base64,/, "");
+            return [img, params]
         }
         catch (err){
-          console.log(err);
-          return err;
+            console.log(err);
+            return err;
         }
     }
 
     async create({speed, damping, iterations, radius}){
+        // Create random image from parameters.
         return new Promise(function(resolve, reject){
             let pde = new WaveGrid(this.size, {speed, damping});
             pde.initGaussian(this.size, radius);
 
-            let [data, max] = pde.solve(iterations);
-            [data, max] = this.iterpolate(data, this.interpScale);
+            let [grid, max] = pde.solve(iterations);
+            [grid, max] = this.iterpolate(grid, this.interpScale);
 
-            let array = pde.toUint8(data.getArray(), max, Image.colormap);
+            let array = pde.toUint8(grid.getArray(), max, Image.colormap);
 
             let image = new Jimp(this.sizeHD[0], this.sizeHD[1], function (err, img) {
                 let buffer = img.bitmap.data
@@ -61,8 +66,9 @@ class Image{
         }.bind(this));
     }
 
-    iterpolate(data, scale){
-        return BilinearInterpolation.interpGrid(data, scale);
+    iterpolate(grid, scale){
+        // Scale an image by a scale factor via bilinear interpolation.
+        return BilinearInterpolation.interpGrid(grid, scale);
     }
 
     static colormap(value){
